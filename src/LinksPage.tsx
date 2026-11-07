@@ -64,7 +64,7 @@ export default function LinksPage() {
               {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => track("click", l.id, lang)}
             >
-              <span className="ico" aria-hidden="true">{l.icon}</span>
+              <span className={`ico ${l.icon.startsWith("/") ? "img" : ""}`} aria-hidden="true">{l.icon.startsWith("/") ? <img src={l.icon} alt="" /> : l.icon}</span>
               <span className="txt">
                 <strong>{l.label[lang]}</strong>
                 {l.hint && <small>{l.hint[lang]}</small>}

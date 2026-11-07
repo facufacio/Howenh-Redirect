@@ -6,7 +6,7 @@ export type Lang = "en" | "es";
 
 export interface LinkItem {
   id: string;
-  icon: string; // emoji
+  icon: string; // emoji, o ruta a una imagen (ej: "/icons/facebook.svg")
   label: Record<Lang, string>;
   hint?: Record<Lang, string>;
   /** URL fija, o una función que la arma según el idioma elegido. */
@@ -30,20 +30,20 @@ export const LINKS: LinkItem[] = [
   // ---- Visibles por ahora ----
   {
     id: "contact",
-    icon: "💬",
+    icon: "/icons/whatsapp.svg",
     label: { en: "¡Contact us!", es: "¡Contactanos!" },
     url: WHATSAPP_URL,
     destacado: true,
   },
   {
     id: "website",
-    icon: "🌐",
+    icon: "/icons/howenh.png",
     label: { en: "¡Check our Web!", es: "¡Visitá nuestra web!" },
     url: "https://howenhlodge.com.ar",
   },
   {
     id: "facebook",
-    icon: "📘",
+    icon: "/icons/facebook.svg",
     label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" },
     url: "https://www.facebook.com/HowenhLodge",
   },

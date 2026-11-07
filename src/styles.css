@@ -40,7 +40,9 @@ code { background: #0b1626; padding: 1px 6px; border-radius: 6px; font-size: 12p
 .btn:hover { border-color: var(--accent); transform: translateY(-1px); }
 .btn:active { transform: scale(.985); }
 .btn.main { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-.btn .ico { font-size: 24px; width: 32px; text-align: center; }
+.btn .ico { font-size: 24px; width: 44px; display: flex; align-items: center; justify-content: center; }
+.btn .ico img { max-width: 44px; max-height: 32px; width: auto; height: auto; }
+.btn .ico.img:has(img[src$=".svg"]) img { width: 32px; height: 32px; }
 .btn .txt { flex: 1; display: grid; gap: 2px; text-align: left; }
 .btn .txt strong { font-size: 16px; }
 .btn .txt small { font-size: 12px; opacity: .75; }
