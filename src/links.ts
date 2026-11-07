@@ -23,15 +23,8 @@ export const SITE = {
   } as Record<Lang, string>,
 };
 
-// WhatsApp: número completo con código de país y sin "+" ni espacios (ej: "5492964123456").
-// Mientras esté vacío, el botón "Contact us" no se muestra.
-const WHATSAPP_NUMERO = "";
-const WHATSAPP_MENSAJE: Record<Lang, string> = {
-  en: "Hello! I'd like more information about Howenh Lodge.",
-  es: "¡Hola! Quisiera más información sobre Howenh Lodge.",
-};
-const whatsappUrl = (lang: Lang) =>
-  WHATSAPP_NUMERO ? `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(WHATSAPP_MENSAJE[lang])}` : "";
+// WhatsApp: link corto de wa.link (el mensaje inicial se configura en wa.link).
+const WHATSAPP_URL = "https://wa.link/aoyy7g";
 
 export const LINKS: LinkItem[] = [
   // ---- Visibles por ahora ----
@@ -39,7 +32,7 @@ export const LINKS: LinkItem[] = [
     id: "contact",
     icon: "💬",
     label: { en: "¡Contact us!", es: "¡Contactanos!" },
-    url: whatsappUrl, // abre WhatsApp con un mensaje ya escrito
+    url: WHATSAPP_URL,
     destacado: true,
   },
   {
