@@ -33,7 +33,6 @@ export const LINKS: LinkItem[] = [
     icon: "/icons/whatsapp.svg",
     label: { en: "¡Contact us!", es: "¡Contactanos!" },
     url: WHATSAPP_URL,
-    destacado: true,
   },
   {
     id: "website",
