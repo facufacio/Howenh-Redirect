@@ -48,6 +48,12 @@ export const LINKS: LinkItem[] = [
     label: { en: "¡Check our Web!", es: "¡Visitá nuestra web!" },
     url: "https://howenhlodge.com.ar",
   },
+  {
+    id: "facebook",
+    icon: "📘",
+    label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" },
+    url: "https://www.facebook.com/HowenhLodge",
+  },
 
   // ---- Listos pero ocultos (para activarlos, sacar `activo: false`) ----
   {
@@ -63,13 +69,6 @@ export const LINKS: LinkItem[] = [
     icon: "▶️",
     label: { en: "Watch our Youtube videos", es: "Mirá nuestros videos de YouTube" },
     url: "https://www.youtube.com/@HowenhLodge",
-    activo: false,
-  },
-  {
-    id: "facebook",
-    icon: "📘",
-    label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" },
-    url: "https://www.facebook.com/HowenhLodge",
     activo: false,
   },
 ];
