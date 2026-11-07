@@ -31,9 +31,9 @@ export const LINKS: LinkItem[] = [
     destacado: true,
   },
   // TODO: completar las URLs reales (si queda vacía, el botón no aparece).
-  { id: "website", icon: "🌐", label: { en: "Check our web!", es: "¡Visitá nuestra web!" }, url: "" },
-  { id: "youtube", icon: "▶️", label: { en: "Watch our Youtube videos", es: "Mirá nuestros videos de YouTube" }, url: "" },
-  { id: "facebook", icon: "📘", label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" }, url: "" },
+  { id: "website", icon: "🌐", label: { en: "Check our web!", es: "¡Visitá nuestra web!" }, url: "https://howenhlodge.com.ar" },
+  { id: "youtube", icon: "▶️", label: { en: "Watch our Youtube videos", es: "Mirá nuestros videos de YouTube" }, url: "https://www.youtube.com/@HowenhLodge" },
+  { id: "facebook", icon: "📘", label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" }, url: "https://www.facebook.com/HowenhLodge" },
   { id: "instagram", icon: "📸", label: { en: "Instagram", es: "Instagram" }, url: "" },
   { id: "whatsapp", icon: "💬", label: { en: "WhatsApp", es: "WhatsApp" }, url: "" },
   { id: "email", icon: "✉️", label: { en: "Email us", es: "Escribinos" }, url: "" }, // ej: mailto:info@tudominio.com
