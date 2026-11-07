@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { LINKS, SITE, type Lang } from "./links";
+import { LINKS, SITE, urlDe, type Lang } from "./links";
 import { track } from "./track";
 
 const LANG_KEY = "hl_lang";
@@ -35,7 +35,7 @@ export default function LinksPage() {
     }
   };
 
-  const activos = LINKS.filter((l) => l.url.trim() !== "");
+  const activos = LINKS.filter((l) => l.activo !== false && urlDe(l, lang) !== "").map((l) => ({ ...l, href: urlDe(l, lang) }));
 
   return (
     <main className="page">
@@ -55,11 +55,11 @@ export default function LinksPage() {
 
       <nav className="links" aria-label="Links">
         {activos.map((l) => {
-          const externo = /^https?:/i.test(l.url);
+          const externo = /^https?:/i.test(l.href);
           return (
             <a
               key={l.id}
-              href={l.url}
+              href={l.href}
               className={`btn ${l.destacado ? "main" : ""}`}
               {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => track("click", l.id, lang)}
