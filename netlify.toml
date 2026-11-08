@@ -3,6 +3,7 @@
   publish = "dist"
 
 # Una sola página: cualquier ruta (ej. /admin) la resuelve la app.
+# (/geo lo atiende la edge function de netlify/edge-functions/geo.ts, que corre antes de esta regla.)
 [[redirects]]
   from = "/*"
   to = "/index.html"

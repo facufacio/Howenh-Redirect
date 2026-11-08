@@ -17,11 +17,22 @@ interface Stats {
   by_link: { link_id: string | null; clicks: number }[];
   by_day: ({ day: string } & Fila)[];
   by_source: ({ source: string } & Fila)[];
+  by_campaign: { source: string; medium: string; campaign: string; views: number; clicks: number }[];
+  by_country: ({ country: string } & Fila)[];
   by_device: ({ device: string } & Fila)[];
 }
 
 const nombreLink = (id: string | null) =>
   LINKS.find((l) => l.id === id)?.label.es ?? id ?? "—";
+
+const nombresPais = (() => {
+  try {
+    return new Intl.DisplayNames(["es"], { type: "region" });
+  } catch {
+    return null;
+  }
+})();
+const nombrePais = (c: string) => (c === "?" ? "Desconocido" : (nombresPais?.of(c) ?? c));
 
 const pct = (a: number, b: number) => (b > 0 ? `${((a / b) * 100).toFixed(1)}%` : "—");
 
@@ -127,15 +138,42 @@ function Panel({ session }: { session: Session }) {
             <div className="card">
               <h3>Origen del tráfico</h3>
               <table>
-                <thead><tr><th>Origen</th><th>Visitas</th><th>Clics</th></tr></thead>
+                <thead><tr><th>Origen</th><th>Visitas</th><th>%</th><th>Clics</th></tr></thead>
                 <tbody>
                   {stats.by_source.map((s) => (
-                    <tr key={s.source}><td>{s.source}</td><td>{s.views}</td><td>{s.clicks}</td></tr>
+                    <tr key={s.source}><td>{s.source}</td><td>{s.views}</td><td>{pct(s.views, stats.views)}</td><td>{s.clicks}</td></tr>
                   ))}
-                  {stats.by_source.length === 0 && <tr><td colSpan={3} className="muted">Sin datos todavía.</td></tr>}
+                  {stats.by_source.length === 0 && <tr><td colSpan={4} className="muted">Sin datos todavía.</td></tr>}
                 </tbody>
               </table>
               <p className="muted small">Para distinguir redes, agregá <code>?utm_source=instagram</code> al link que pegues en cada una.</p>
+            </div>
+            <div className="card">
+              <h3>País</h3>
+              <table>
+                <thead><tr><th>País</th><th>Visitas</th><th>%</th><th>Clics</th></tr></thead>
+                <tbody>
+                  {(stats.by_country ?? []).map((c) => (
+                    <tr key={c.country}><td>{nombrePais(c.country)}</td><td>{c.views}</td><td>{pct(c.views, stats.views)}</td><td>{c.clicks}</td></tr>
+                  ))}
+                  {(stats.by_country ?? []).length === 0 && <tr><td colSpan={4} className="muted">Sin datos todavía.</td></tr>}
+                </tbody>
+              </table>
+            </div>
+            <div className="card">
+              <h3>Campañas (utm)</h3>
+              <table>
+                <thead><tr><th>Red / medio / campaña</th><th>Visitas</th><th>Clics</th></tr></thead>
+                <tbody>
+                  {(stats.by_campaign ?? []).map((c) => (
+                    <tr key={`${c.source}|${c.medium}|${c.campaign}`}>
+                      <td>{[c.source, c.medium, c.campaign].filter((x) => x !== "—").join(" / ") || "—"}</td>
+                      <td>{c.views}</td><td>{c.clicks}</td>
+                    </tr>
+                  ))}
+                  {(stats.by_campaign ?? []).length === 0 && <tr><td colSpan={3} className="muted">Sin datos todavía.</td></tr>}
+                </tbody>
+              </table>
             </div>
             <div className="card">
               <h3>Dispositivos</h3>

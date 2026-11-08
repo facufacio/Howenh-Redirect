@@ -34,8 +34,22 @@ function hostDeReferrer(): string {
   }
 }
 
-export function track(type: "view" | "click", linkId: string | null, lang: string) {
+// País del visitante (código de 2 letras) desde la edge function /geo de Netlify. Sin IP.
+// Si falla o no existe (ej. en local), queda vacío y todo sigue andando.
+let pais = "";
+const paisListo: Promise<void> = trackingActivo
+  ? fetch("/geo")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (j && typeof j.country === "string" && /^[A-Za-z]{2}$/.test(j.country)) pais = j.country.toUpperCase();
+      })
+      .catch(() => {})
+  : Promise.resolve();
+
+export async function track(type: "view" | "click", linkId: string | null, lang: string) {
   if (!URL || !KEY) return;
+  // La visita espera un momento al país; el clic no espera (el navegador ya se está yendo).
+  if (type === "view") await Promise.race([paisListo, new Promise((r) => setTimeout(r, 1500))]);
   const q = new URLSearchParams(window.location.search);
   const row = {
     type,
@@ -47,6 +61,7 @@ export function track(type: "view" | "click", linkId: string | null, lang: strin
     utm_campaign: q.get("utm_campaign") || "",
     device: dispositivo(),
     lang,
+    country: pais,
   };
   // keepalive: el envío sigue aunque el navegador ya esté yendo al link.
   fetch(`${URL}/rest/v1/events`, {

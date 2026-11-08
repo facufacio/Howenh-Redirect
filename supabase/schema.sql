@@ -1,6 +1,7 @@
 -- Base de datos de métricas de la página de links.
 -- Correr UNA vez en Supabase > SQL Editor, en el proyecto PROPIO de esta página
 -- (no en el de Howenh Operatives).
+-- Si instalás desde cero, después de este archivo corré también supabase/migrations/002_pais_y_origen.sql.
 
 -- 1) Eventos: una fila por visita ('view') o clic ('click').
 create table if not exists public.events (
@@ -14,7 +15,8 @@ create table if not exists public.events (
   utm_medium  text check (char_length(utm_medium) <= 60),
   utm_campaign text check (char_length(utm_campaign) <= 60),
   device      text check (device in ('mobile', 'tablet', 'desktop')),
-  lang        text check (char_length(lang) <= 5)
+  lang        text check (char_length(lang) <= 5),
+  country     text check (char_length(country) <= 2)
 );
 create index if not exists events_created_at_idx on public.events (created_at);
 
