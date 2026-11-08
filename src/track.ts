@@ -53,7 +53,7 @@ export function track(type: "view" | "click", linkId: string | null, lang: strin
     method: "POST",
     headers: {
       apikey: KEY,
-      Authorization: `Bearer ${KEY}`,
+      ...(KEY.startsWith("sb_") ? {} : { Authorization: `Bearer ${KEY}` }), // las claves nuevas (sb_publishable_) van solo en apikey
       "Content-Type": "application/json",
       Prefer: "return=minimal",
     },
