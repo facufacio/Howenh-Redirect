@@ -146,7 +146,7 @@ function Panel({ session }: { session: Session }) {
                   {stats.by_source.length === 0 && <tr><td colSpan={4} className="muted">Sin datos todavía.</td></tr>}
                 </tbody>
               </table>
-              <p className="muted small">Para distinguir redes, agregá <code>?utm_source=instagram</code> al link que pegues en cada una.</p>
+              <p className="muted small">Para distinguir redes, pegá en cada una el link con su nombre al final, por ejemplo <code>/instagram</code> o <code>/facebook</code>.</p>
             </div>
             <div className="card">
               <h3>País</h3>
