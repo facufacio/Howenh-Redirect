@@ -46,6 +46,13 @@ const paisListo: Promise<void> = trackingActivo
       .catch(() => {})
   : Promise.resolve();
 
+// Origen por link corto: howenhredirect.netlify.app/instagram cuenta como utm_source=instagram.
+// Si además hay ?utm_source=..., manda el de la URL.
+function origenDeLaRuta(): string {
+  const seg = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase() ?? "";
+  return /^[a-z0-9_-]{1,40}$/.test(seg) && seg !== "admin" && seg !== "geo" ? seg : "";
+}
+
 export async function track(type: "view" | "click", linkId: string | null, lang: string) {
   if (!URL || !KEY) return;
   // La visita espera un momento al país; el clic no espera (el navegador ya se está yendo).
@@ -56,7 +63,7 @@ export async function track(type: "view" | "click", linkId: string | null, lang:
     link_id: linkId,
     visitor_id: visitorId(),
     referrer: hostDeReferrer(),
-    utm_source: q.get("utm_source") || "",
+    utm_source: q.get("utm_source") || origenDeLaRuta(),
     utm_medium: q.get("utm_medium") || "",
     utm_campaign: q.get("utm_campaign") || "",
     device: dispositivo(),

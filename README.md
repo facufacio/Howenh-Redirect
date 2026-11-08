@@ -33,11 +33,14 @@ No cambies el `id` de un link ya publicado: es el nombre con el que se cuentan s
 
 ## 4. Medir de qué red viene cada visita
 
-Pegá en cada red el link con una etiqueta, por ejemplo:
+Pegá en cada red el link con su nombre al final (lo más simple), por ejemplo:
 
-- Instagram: `https://TU-SITIO.netlify.app/?utm_source=instagram`
-- TikTok: `https://TU-SITIO.netlify.app/?utm_source=tiktok`
-- WhatsApp: `https://TU-SITIO.netlify.app/?utm_source=whatsapp`
+- Instagram: `https://TU-SITIO.netlify.app/instagram`
+- Facebook: `https://TU-SITIO.netlify.app/facebook`
+- WhatsApp: `https://TU-SITIO.netlify.app/whatsapp`
+
+Cualquier nombre sirve (letras, números, guion): `/tiktok`, `/mail`, `/cartel-ruta`… y aparece solo en el panel.
+También funciona la forma larga `?utm_source=instagram&utm_medium=bio&utm_campaign=verano` (aparece en "Campañas").
 
 Las apps (Instagram, etc.) suelen no informar de dónde vino el visitante: la etiqueta `utm_source` es lo que lo resuelve.
 
