@@ -56,8 +56,8 @@ const aDraft = (r: LinkRow): Draft => {
 
 function aFila(d: Draft, orden: number): { fila?: Omit<LinkRow, "orden"> & { orden: number }; error?: string } {
   const id = d.nuevo ? slug(d.id || d.label_en) : d.id;
-  if (!id) return { error: "Poné un título en inglés (se usa para el nombre interno)." };
-  if (!d.label_en.trim() || !d.label_es.trim()) return { error: "Falta el título en inglés o en español." };
+  if (!id) return { error: "Poné un título (se usa para el nombre interno)." };
+  if (!d.label_en.trim()) return { error: "Falta el título del botón." };
   if (!urlOk(d.url.trim())) return { error: "El link tiene que empezar con https://, mailto: o tel:" };
   const url_por_red: Record<string, string> = {};
   for (const p of d.porRed) {
@@ -71,8 +71,8 @@ function aFila(d: Draft, orden: number): { fila?: Omit<LinkRow, "orden"> & { ord
   return {
     fila: {
       id, orden, activo: d.activo, destacado: d.destacado, icon,
-      label_en: d.label_en.trim(), label_es: d.label_es.trim(),
-      hint_en: d.hint_en.trim(), hint_es: d.hint_es.trim(),
+      label_en: d.label_en.trim(), label_es: d.label_en.trim(), // la página es solo en inglés
+      hint_en: d.hint_en.trim(), hint_es: d.hint_en.trim(),
       url: d.url.trim(), url_por_red, solo_en: lista(d.solo), oculto_en: lista(d.oculto),
     },
   };
@@ -97,8 +97,7 @@ function Formulario({
   return (
     <div className="form">
       <div className="fgrid">
-        <label>Título en inglés<input value={draft.label_en} onChange={(e) => set("label_en", e.target.value)} maxLength={80} /></label>
-        <label>Título en español<input value={draft.label_es} onChange={(e) => set("label_es", e.target.value)} maxLength={80} /></label>
+        <label>Título del botón<input value={draft.label_en} onChange={(e) => set("label_en", e.target.value)} maxLength={80} /></label>
         <label className="wide">Link (adonde lleva)
           <input value={draft.url} onChange={(e) => set("url", e.target.value)} placeholder="https://..." inputMode="url" />
         </label>
@@ -111,8 +110,7 @@ function Formulario({
         {draft.icono === "emoji" && (
           <label>Emoji<input value={draft.emoji} onChange={(e) => set("emoji", e.target.value)} maxLength={8} /></label>
         )}
-        <label>Subtítulo en inglés (opcional)<input value={draft.hint_en} onChange={(e) => set("hint_en", e.target.value)} maxLength={160} /></label>
-        <label>Subtítulo en español (opcional)<input value={draft.hint_es} onChange={(e) => set("hint_es", e.target.value)} maxLength={160} /></label>
+        <label>Subtítulo (opcional)<input value={draft.hint_en} onChange={(e) => set("hint_en", e.target.value)} maxLength={160} /></label>
       </div>
 
       <div className="checks">
@@ -190,7 +188,7 @@ export default function LinksEditor({ supabase, onCambio }: { supabase: Supabase
     const orden = draft.nuevo ? (filas.reduce((m, f) => Math.max(m, f.orden), 0) + 1) : filas.find((f) => f.id === draft.id)?.orden ?? 0;
     const { fila, error: e } = aFila(draft, orden);
     if (e || !fila) return setErrForm(e ?? "Datos inválidos");
-    if (draft.nuevo && filas.some((f) => f.id === fila.id)) return setErrForm(`Ya existe un botón con el nombre interno "${fila.id}". Cambiá el título en inglés.`);
+    if (draft.nuevo && filas.some((f) => f.id === fila.id)) return setErrForm(`Ya existe un botón con el nombre interno "${fila.id}". Cambiá el título.`);
     setGuardando(true);
     const { error: err } = await supabase.from("links").upsert({ ...fila, updated_at: new Date().toISOString() });
     setGuardando(false);
@@ -202,7 +200,7 @@ export default function LinksEditor({ supabase, onCambio }: { supabase: Supabase
 
   const borrar = async () => {
     if (!draft || draft.nuevo) return;
-    if (!window.confirm(`¿Borrar el botón "${draft.label_es}"? Las métricas de sus clics anteriores se conservan.`)) return;
+    if (!window.confirm(`¿Borrar el botón "${draft.label_en}"? Las métricas de sus clics anteriores se conservan.`)) return;
     setGuardando(true);
     const { error: err } = await supabase.from("links").delete().eq("id", draft.id);
     setGuardando(false);
@@ -261,7 +259,7 @@ export default function LinksEditor({ supabase, onCambio }: { supabase: Supabase
           <div className="bsum">
             <span className="bico"><Icono icon={f.icon} /></span>
             <span className="btxt">
-              <strong>{f.label_es}</strong>
+              <strong>{f.label_en}</strong>
               <small>
                 {f.id}
                 {f.solo_en?.length ? ` · solo en: ${f.solo_en.join(", ")}` : ""}

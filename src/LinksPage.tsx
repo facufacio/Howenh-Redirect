@@ -3,20 +3,10 @@ import { LINKS, SITE, urlDe, visibleEn, type Lang, type LinkItem } from "./links
 import { cargarLinks, linksEnCache } from "./linksApi";
 import { redActual, track } from "./track";
 
-const LANG_KEY = "hl_lang";
-
-function langInicial(): Lang {
-  try {
-    const guardado = localStorage.getItem(LANG_KEY);
-    if (guardado === "en" || guardado === "es") return guardado;
-  } catch {
-    /* localStorage bloqueado: seguimos con el default */
-  }
-  return "en";
-}
+// La página se muestra solo en inglés.
+const lang: Lang = "en";
 
 export default function LinksPage() {
-  const [lang, setLang] = useState<Lang>(langInicial);
   const visto = useRef(false);
   // Botones: los últimos guardados (o los de links.ts) al instante, y se actualizan con los de la base.
   const [links, setLinks] = useState<LinkItem[]>(() => linksEnCache() ?? LINKS);
@@ -35,17 +25,7 @@ export default function LinksPage() {
     if (visto.current) return;
     visto.current = true;
     track("view", null, lang);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const cambiarLang = (l: Lang) => {
-    setLang(l);
-    try {
-      localStorage.setItem(LANG_KEY, l);
-    } catch {
-      /* sin persistencia */
-    }
-  };
 
   const red = redActual();
   const activos = links
@@ -54,14 +34,6 @@ export default function LinksPage() {
 
   return (
     <main className="page">
-      <div className="lang" role="group" aria-label="Language">
-        {(["en", "es"] as Lang[]).map((l) => (
-          <button key={l} className={lang === l ? "on" : ""} onClick={() => cambiarLang(l)} aria-pressed={lang === l}>
-            {l.toUpperCase()}
-          </button>
-        ))}
-      </div>
-
       <header className="head">
         <img src="/logo.jpg" alt="Howenh Lodge" className="logo" width={96} height={96} />
         <h1>{SITE.title}</h1>

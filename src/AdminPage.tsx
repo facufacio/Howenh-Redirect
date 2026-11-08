@@ -25,7 +25,7 @@ interface Stats {
 }
 
 const nombreLink = (items: LinkItem[], id: string | null) =>
-  items.find((l) => l.id === id)?.label.es ?? id ?? "—";
+  items.find((l) => l.id === id)?.label.en ?? id ?? "—";
 
 const nombresPais = (() => {
   try {
