@@ -31,7 +31,7 @@ export const SITE = {
 const WHATSAPP_URL = "https://wa.link/aoyy7g";
 
 // Instagram: pegar acá la URL del perfil (ej: "https://www.instagram.com/usuario"). Vacío = no se muestra.
-const INSTAGRAM_URL = "";
+const INSTAGRAM_URL = "https://www.instagram.com/howenhlodge";
 
 export const LINKS: LinkItem[] = [
   // ---- Visibles por ahora ----
