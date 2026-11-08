@@ -87,3 +87,32 @@ td:nth-child(n+2), th:nth-child(n+2) { text-align: right; }
 .days { display: flex; align-items: flex-end; gap: 3px; height: 120px; }
 .day { flex: 1; height: 100%; display: flex; align-items: flex-end; }
 .day i { display: block; width: 100%; min-height: 2px; background: var(--accent); border-radius: 3px 3px 0 0; }
+
+/* ---------- Pestañas y editor de botones ---------- */
+.tabs { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.admin .tabs button { background: transparent; border: 0; border-radius: 0; color: var(--muted); padding: 7px 16px; }
+.admin .tabs button.on { background: var(--accent); color: var(--accent-text); font-weight: 700; }
+.editor .ehead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.editor .ehead h3 { margin: 0; }
+.brow { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin: 8px 0; background: #14233a; }
+.brow.off .bsum { opacity: .6; }
+.bsum { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bico { width: 34px; height: 34px; display: grid; place-items: center; font-size: 22px; }
+.bico img { max-width: 34px; max-height: 26px; }
+.btxt { flex: 1; min-width: 140px; display: grid; gap: 2px; }
+.btxt small { color: var(--muted); font-size: 12px; }
+.bact { display: flex; gap: 6px; flex-wrap: wrap; }
+.admin .bact button { padding: 6px 10px; font-size: 13px; }
+.form { margin-top: 12px; display: grid; gap: 10px; }
+.form h4 { margin: 6px 0 0; font-size: 14px; }
+.form p { margin: 0; }
+.fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.fgrid .wide { grid-column: 1 / -1; }
+.form label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+.form input[type=checkbox] { width: auto; margin-right: 6px; }
+.checks { display: flex; gap: 18px; flex-wrap: wrap; }
+.checks label { display: flex; align-items: center; font-size: 13px; color: var(--text); }
+.porred { display: grid; gap: 8px; }
+.prow { display: grid; grid-template-columns: 140px 1fr auto; gap: 8px; }
+.facts { display: flex; gap: 8px; flex-wrap: wrap; }
+.admin .danger { color: #ff8a8a; border-color: #5a2a2a; margin-left: auto; }

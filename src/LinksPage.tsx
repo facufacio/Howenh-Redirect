@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { LINKS, SITE, urlDe, visibleEn, type Lang } from "./links";
+import { LINKS, SITE, urlDe, visibleEn, type Lang, type LinkItem } from "./links";
+import { cargarLinks, linksEnCache } from "./linksApi";
 import { redActual, track } from "./track";
 
 const LANG_KEY = "hl_lang";
@@ -17,6 +18,17 @@ function langInicial(): Lang {
 export default function LinksPage() {
   const [lang, setLang] = useState<Lang>(langInicial);
   const visto = useRef(false);
+  // Botones: los últimos guardados (o los de links.ts) al instante, y se actualizan con los de la base.
+  const [links, setLinks] = useState<LinkItem[]>(() => linksEnCache() ?? LINKS);
+  useEffect(() => {
+    let vivo = true;
+    cargarLinks().then((l) => {
+      if (vivo && l) setLinks(l);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, []);
 
   // Una visita por carga de página (StrictMode ejecuta el efecto dos veces en desarrollo).
   useEffect(() => {
@@ -36,7 +48,9 @@ export default function LinksPage() {
   };
 
   const red = redActual();
-  const activos = LINKS.filter((l) => visibleEn(l, red) && urlDe(l, lang) !== "").map((l) => ({ ...l, href: urlDe(l, lang) }));
+  const activos = links
+    .filter((l) => visibleEn(l, red) && urlDe(l, lang, red) !== "")
+    .map((l) => ({ ...l, href: urlDe(l, lang, red) }));
 
   return (
     <main className="page">
@@ -65,7 +79,7 @@ export default function LinksPage() {
               {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => track("click", l.id, lang)}
             >
-              <span className={`ico ${l.icon.startsWith("/") ? "img" : ""}`} aria-hidden="true">{l.icon.startsWith("/") ? <img src={l.icon} alt="" /> : l.icon}</span>
+              <span className={`ico ${l.icon.startsWith("/icons/") ? "img" : ""}`} aria-hidden="true">{l.icon.startsWith("/icons/") ? <img src={l.icon} alt="" /> : l.icon}</span>
               <span className="txt">
                 <strong>{l.label[lang]}</strong>
                 {l.hint && <small>{l.hint[lang]}</small>}

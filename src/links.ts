@@ -13,6 +13,8 @@ export interface LinkItem {
   url: string | ((lang: Lang) => string);
   destacado?: boolean; // botón principal (color lleno)
   activo?: boolean; // false = oculto por ahora (por defecto, visible)
+  /** Link distinto según la red (ej: { instagram: "https://..." }). */
+  urlPorRed?: Record<string, string>;
   /** Solo se muestra cuando la página se abre desde estas redes (ej: ["facebook"]). */
   soloEn?: string[];
   /** No se muestra cuando la página se abre desde estas redes. */
@@ -80,9 +82,13 @@ export const LINKS: LinkItem[] = [
   },
 ];
 
-/** URL final de un link en el idioma actual ("" si no hay). */
 /** ¿Este link se muestra en esta red? (red "" = entrada directa) */
 export const visibleEn = (l: LinkItem, red: string): boolean =>
-  l.activo !== false && (!l.soloEn || l.soloEn.includes(red)) && !(l.ocultoEn ?? []).includes(red);
+  l.activo !== false && (!l.soloEn?.length || l.soloEn.includes(red)) && !(l.ocultoEn ?? []).includes(red);
 
-export const urlDe = (l: LinkItem, lang: Lang): string => (typeof l.url === "function" ? l.url(lang) : l.url).trim();
+/** URL final de un link en el idioma y la red actuales ("" si no hay o no es segura). */
+export const urlDe = (l: LinkItem, lang: Lang, red = ""): string => {
+  const propia = red ? l.urlPorRed?.[red] : undefined;
+  const u = (propia || (typeof l.url === "function" ? l.url(lang) : l.url)).trim();
+  return /^(https?:\/\/|mailto:|tel:)/i.test(u) ? u : "";
+};

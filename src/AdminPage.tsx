@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient, type Session } from "@supabase/supabase-js";
-import { LINKS } from "./links";
+import { LINKS, type LinkItem } from "./links";
+import { cargarLinks } from "./linksApi";
+import LinksEditor from "./LinksEditor";
 
 const URL_SB = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const KEY_SB = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
@@ -22,8 +24,8 @@ interface Stats {
   by_device: ({ device: string } & Fila)[];
 }
 
-const nombreLink = (id: string | null) =>
-  LINKS.find((l) => l.id === id)?.label.es ?? id ?? "—";
+const nombreLink = (items: LinkItem[], id: string | null) =>
+  items.find((l) => l.id === id)?.label.es ?? id ?? "—";
 
 const nombresPais = (() => {
   try {
@@ -84,6 +86,15 @@ function Panel({ session }: { session: Session }) {
   const [stats, setStats] = useState<Stats | null>(null);
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(true);
+  const [vista, setVista] = useState<"metricas" | "botones">("metricas");
+  const [items, setItems] = useState<LinkItem[]>(LINKS);
+
+  const cargarNombres = useCallback(() => {
+    cargarLinks().then((l) => l && setItems(l));
+  }, []);
+  useEffect(() => {
+    cargarNombres();
+  }, [cargarNombres]);
 
   const cargar = useCallback(async () => {
     if (!supabase) return;
@@ -105,23 +116,29 @@ function Panel({ session }: { session: Session }) {
   return (
     <div className="admin">
       <header className="bar">
-        <h1>Métricas · Howenh Lodge</h1>
+        <h1>Howenh Lodge · Panel</h1>
+        <div className="tabs" role="tablist">
+          <button role="tab" aria-selected={vista === "metricas"} className={vista === "metricas" ? "on" : ""} onClick={() => setVista("metricas")}>Métricas</button>
+          <button role="tab" aria-selected={vista === "botones"} className={vista === "botones" ? "on" : ""} onClick={() => setVista("botones")}>Botones</button>
+        </div>
         <div className="right">
-          <select value={dias} onChange={(e) => setDias(Number(e.target.value))} aria-label="Período">
+          {vista === "metricas" && (<><select value={dias} onChange={(e) => setDias(Number(e.target.value))} aria-label="Período">
             <option value={7}>Últimos 7 días</option>
             <option value={30}>Últimos 30 días</option>
             <option value={90}>Últimos 90 días</option>
             <option value={365}>Último año</option>
           </select>
-          <button onClick={cargar}>Actualizar</button>
+          <button onClick={cargar}>Actualizar</button></>)}
           <button onClick={() => supabase?.auth.signOut()} title={session.user.email ?? ""}>Salir</button>
         </div>
       </header>
 
-      {error && <p className="err">{error}</p>}
-      {cargando && !stats && <p className="muted">Cargando…</p>}
+      {vista === "botones" && supabase && <LinksEditor supabase={supabase} onCambio={cargarNombres} />}
 
-      {stats && (
+      {vista === "metricas" && error && <p className="err">{error}</p>}
+      {vista === "metricas" && cargando && !stats && <p className="muted">Cargando…</p>}
+
+      {vista === "metricas" && stats && (
         <>
           <section className="kpis">
             <div className="card"><span>Visitas</span><b>{stats.views}</b></div>
@@ -133,7 +150,7 @@ function Panel({ session }: { session: Session }) {
           <section className="grid">
             <div className="card">
               <h3>Clics por link</h3>
-              <Barras filas={stats.by_link.map((l) => ({ nombre: nombreLink(l.link_id), valor: l.clicks }))} />
+              <Barras filas={stats.by_link.map((l) => ({ nombre: nombreLink(items, l.link_id), valor: l.clicks }))} />
             </div>
             <div className="card">
               <h3>Origen del tráfico</h3>
