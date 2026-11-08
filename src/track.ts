@@ -48,9 +48,14 @@ const paisListo: Promise<void> = trackingActivo
 
 // Origen por link corto: howenhredirect.netlify.app/instagram cuenta como utm_source=instagram.
 // Si además hay ?utm_source=..., manda el de la URL.
-function origenDeLaRuta(): string {
+export function origenDeLaRuta(): string {
   const seg = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase() ?? "";
   return /^[a-z0-9_-]{1,40}$/.test(seg) && seg !== "admin" && seg !== "geo" ? seg : "";
+}
+
+/** Red desde la que se entró: ?utm_source=... o el nombre en la ruta ("" si es entrada directa). */
+export function redActual(): string {
+  return (new URLSearchParams(window.location.search).get("utm_source") || origenDeLaRuta()).toLowerCase();
 }
 
 export async function track(type: "view" | "click", linkId: string | null, lang: string) {

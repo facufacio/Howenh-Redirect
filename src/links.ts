@@ -13,6 +13,10 @@ export interface LinkItem {
   url: string | ((lang: Lang) => string);
   destacado?: boolean; // botón principal (color lleno)
   activo?: boolean; // false = oculto por ahora (por defecto, visible)
+  /** Solo se muestra cuando la página se abre desde estas redes (ej: ["facebook"]). */
+  soloEn?: string[];
+  /** No se muestra cuando la página se abre desde estas redes. */
+  ocultoEn?: string[];
 }
 
 export const SITE = {
@@ -25,6 +29,9 @@ export const SITE = {
 
 // WhatsApp: link corto de wa.link (el mensaje inicial se configura en wa.link).
 const WHATSAPP_URL = "https://wa.link/aoyy7g";
+
+// Instagram: pegar acá la URL del perfil (ej: "https://www.instagram.com/usuario"). Vacío = no se muestra.
+const INSTAGRAM_URL = "";
 
 export const LINKS: LinkItem[] = [
   // ---- Visibles por ahora ----
@@ -45,6 +52,14 @@ export const LINKS: LinkItem[] = [
     icon: "/icons/facebook.svg",
     label: { en: "Follow us on Facebook", es: "Seguinos en Facebook" },
     url: "https://www.facebook.com/HowenhLodge",
+    ocultoEn: ["facebook"], // en /facebook ya están en Facebook: se reemplaza por el de Instagram
+  },
+  {
+    id: "instagram",
+    icon: "/icons/instagram.svg",
+    label: { en: "Follow us on Instagram", es: "Seguinos en Instagram" },
+    url: INSTAGRAM_URL,
+    soloEn: ["facebook"],
   },
 
   // ---- Listos pero ocultos (para activarlos, sacar `activo: false`) ----
@@ -66,4 +81,8 @@ export const LINKS: LinkItem[] = [
 ];
 
 /** URL final de un link en el idioma actual ("" si no hay). */
+/** ¿Este link se muestra en esta red? (red "" = entrada directa) */
+export const visibleEn = (l: LinkItem, red: string): boolean =>
+  l.activo !== false && (!l.soloEn || l.soloEn.includes(red)) && !(l.ocultoEn ?? []).includes(red);
+
 export const urlDe = (l: LinkItem, lang: Lang): string => (typeof l.url === "function" ? l.url(lang) : l.url).trim();

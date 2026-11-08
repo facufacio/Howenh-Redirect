@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { LINKS, SITE, urlDe, type Lang } from "./links";
-import { track } from "./track";
+import { LINKS, SITE, urlDe, visibleEn, type Lang } from "./links";
+import { redActual, track } from "./track";
 
 const LANG_KEY = "hl_lang";
 
@@ -35,7 +35,8 @@ export default function LinksPage() {
     }
   };
 
-  const activos = LINKS.filter((l) => l.activo !== false && urlDe(l, lang) !== "").map((l) => ({ ...l, href: urlDe(l, lang) }));
+  const red = redActual();
+  const activos = LINKS.filter((l) => visibleEn(l, red) && urlDe(l, lang) !== "").map((l) => ({ ...l, href: urlDe(l, lang) }));
 
   return (
     <main className="page">
